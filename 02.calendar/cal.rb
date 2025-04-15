@@ -7,9 +7,14 @@ opt = OptionParser.new
 params = {}
 
 # onメソッドを使用してオプションの登録
-opt.on('-y') {|v| params[:y] = v}
-opt.on('-m') {|v| params[:m] = v}
+opt.on('-y', '--year YEAR', Integer) {|v| params[:year] = v }
+opt.on('-m', '--month MONTH', Integer) {|v| params[:month] = v }
 opt.parse!(ARGV)
+
+year = params[:year]
+month = params[:month]
+
+puts params
 
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
 def month_year(params, month, year=2025)
@@ -36,7 +41,7 @@ def month_year(params, month, year=2025)
 end
 
 if params[:y]
-  month_year(params, ARGV[1], ARGV[0])
+  month_year(params, month, year)
 else
-  month_year(params, ARGV[0])
+  month_year(params, month)
 end
