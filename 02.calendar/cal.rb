@@ -11,9 +11,6 @@ opt.on('-y') {|v| params[:y] = v}
 opt.on('-m') {|v| params[:m] = v}
 opt.parse!(ARGV)
 
-today = Date.today
-puts ARGV[1]
-
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
 def month_year(params, month, year=2025)
   year_to_num = year.to_i
