@@ -14,10 +14,8 @@ opt.parse!(ARGV)
 year = params[:year]
 month = params[:month]
 
-puts params
-
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
-def month_year(params, month, year=2025)
+def month_year(params, month, year=Date.today.year)
   year_to_num = year.to_i
   month_to_num = month.to_i
 
