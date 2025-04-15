@@ -11,25 +11,23 @@ opt.on('-y') {|v| params[:y] = v}
 opt.on('-m') {|v| params[:m] = v}
 opt.parse!(ARGV)
 
+today = Date.today
+puts ARGV[1]
+
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
-def month_year(params, year="2025", month)
+def month_year(params, month, year=2025)
   year_to_num = year.to_i
   month_to_num = month.to_i
-  start_day= Date.new(year_to_num, month_to_num)
-  last_day = Date.new(year_to_num, month_to_num, -1)
-  today = Date.today
 
   # 月と年を表示する箇所
-  if params[:y]
-    puts "      #{ARGV[1]}月 #{ARGV[0]}"
-  elsif
-    puts "      #{ARGV[1]}月 #{today.year}"
-  end
+  puts "      #{month}月 #{year}"
 
   # 曜日を表示する箇所
   puts "Su Mo Tu We Th Fr Sa"
 
   # 日付を表示する箇所
+  start_day= Date.new(year_to_num, month_to_num)
+  last_day = Date.new(year_to_num, month_to_num, -1)
   print '   ' * (start_day.wday)
   (start_day..last_day).each do |date|
 
@@ -40,4 +38,8 @@ def month_year(params, year="2025", month)
   end
 end
 
-month_year(params, ARGV[0], ARGV[1])
+if params[:y]
+  month_year(params, ARGV[1], ARGV[0])
+else
+  month_year(params, ARGV[0])
+end
