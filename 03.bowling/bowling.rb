@@ -33,7 +33,7 @@ point = 0
 frames.each_with_index do |frame, i|
   if (i < 8) && (frame[0] == 10) && (frames[i + 1][0] == 10) # 8フレーム以下かつストライクかつ次もストライク(次もストライクの場合、その次の1投目を足す必要がある)
     point += frame.sum + frames[i + 1].sum + frames[i + 2][0]
-  elsif (i < 8) && (frame[0] == 10) && (frames[i + 1][0] != 10)# 8フレーム以下かつストライクかつ次がストライクでない
+  elsif (i < 8) && (frame[0] == 10) && (frames[i + 1][0] != 10) # 8フレーム以下かつストライクかつ次がストライクでない
     point += frame.sum + frames[i + 1].sum
   elsif (i < 8) && (frame.sum == 10) # 8フレーム以下かつスペア
     point += frame.sum + frames[i + 1][0]
