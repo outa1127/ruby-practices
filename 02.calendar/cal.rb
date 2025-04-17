@@ -15,7 +15,7 @@ year = params[:year]
 month = params[:month]
 
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
-def month_year(params, month, year=Date.today.year)
+def month_year(month, year=Date.today.year)
   year_to_num = year.to_i
   month_to_num = month.to_i
 
@@ -38,8 +38,8 @@ def month_year(params, month, year=Date.today.year)
   end
 end
 
-if params[:y]
-  month_year(params, month, year)
+if params[:year]
+  month_year(params[:month], params[:year])
 else
-  month_year(params, month)
+  month_year(params[:month])
 end
