@@ -14,8 +14,7 @@ opt.parse!(ARGV)
 
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
 def month_year(month, year)
-  year_to_num = year.to_i
-  month_to_num = month.to_i
+  year ||= Date.today.year # 自己代入と呼ばれる手法。 yearがもしnullであれば今年の情報を入れるといった書き方にできる。
 
   # 月と年を表示する箇所
   puts "      #{month}月 #{year}"
@@ -24,8 +23,8 @@ def month_year(month, year)
   puts "Su Mo Tu We Th Fr Sa"
 
   # 日付を表示する箇所
-  start_day= Date.new(year_to_num, month_to_num)
-  last_day = Date.new(year_to_num, month_to_num, -1)
+  start_day= Date.new(year, month)
+  last_day = Date.new(year, month, -1)
   print '   ' * (start_day.wday)
   (start_day..last_day).each do |date|
 
@@ -37,5 +36,4 @@ def month_year(month, year)
   puts
 end
 
-year_to_pass = params[:year].nil? ? Date.today.year : params[:year] 
-month_year(params[:month], year_to_pass)
+month_year(params[:month], params[:year])
