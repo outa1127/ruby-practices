@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'debug'
 require "date"
 require "optparse"
 
@@ -12,7 +13,7 @@ opt.on('-m', '--month MONTH', Integer) {|v| params[:month] = v }
 opt.parse!(ARGV)
 
 # paramsでコマンドラインが入力されているか判定、入力されていない場合today_date.yearで今年の値を代入
-def month_year(month, year=Date.today.year)
+def month_year(month, year)
   year_to_num = year.to_i
   month_to_num = month.to_i
 
@@ -35,4 +36,5 @@ def month_year(month, year=Date.today.year)
   end
 end
 
-month_year(params[:month], params[:year])
+year_to_pass = params[:year].nil? ? Date.today.year : params[:year] 
+month_year(params[:month], year_to_pass)
