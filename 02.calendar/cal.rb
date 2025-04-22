@@ -35,8 +35,4 @@ def month_year(month, year=Date.today.year)
   end
 end
 
-if params[:year]
-  month_year(params[:month], params[:year])
-else
-  month_year(params[:month])
-end
+month_year(params[:month], params[:year])
