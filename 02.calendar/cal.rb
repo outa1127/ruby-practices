@@ -34,6 +34,7 @@ def month_year(month, year)
     # 土曜日を表示した後に土曜日だったら改行を行うようにする
     puts if date.saturday?
   end
+  puts
 end
 
 year_to_pass = params[:year].nil? ? Date.today.year : params[:year] 
