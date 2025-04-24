@@ -9,7 +9,6 @@ scores = score.split(',')
 
 shots = []
 scores.each do |s|
-  # binding.break
   if s == 'X' # X(ストライク)だったら配列に10と0を追加
     shots << 10
     shots << 0
@@ -18,10 +17,7 @@ scores.each do |s|
   end
 end
 
-frames = []
-shots.each_slice(2) do |s| # 配列をフレームごと（2つの数字）わけ、繰り返し処理を実施
-  frames << s # 配列の中に配列を代入していく
-end
+frames = shots.each_slice(2).to_a
 
 if frames.length == 12 # 配列が12だった場合
   frames[-3..-1] = [frames[-3] + frames[-2] + frames[-1]] # 最後の三つの配列を結合
