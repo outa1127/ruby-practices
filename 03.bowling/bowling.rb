@@ -20,9 +20,9 @@ end
 frames = shots.each_slice(2).to_a
 
 if frames.length == 12 # 配列が12だった場合
-  frames[-3..-1] = [frames[-3] + frames[-2] + frames[-1]] # 最後の三つの配列を結合
+  frames[-3..] = [frames[-3..].flatten] # 最後の三つの配列を結合
 elsif frames.length == 11 # 配列が11だった場合
-  frames[-2..-1] = [frames[-2] + frames[-1]] # 最後の二つの配列を結合
+  frames[-2..] = [frames[-2..].flatten] # 最後の二つの配列を結合
 end
 
 def strike?(frame)
