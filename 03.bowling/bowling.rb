@@ -43,6 +43,8 @@ frames.each do |frame|
   point += frame.sum
 end
 
+NO_BONUS_SCORE = 0
+
 frames.each_with_index do |frame, i|
   point +=
     if (i < 8)
@@ -53,7 +55,7 @@ frames.each_with_index do |frame, i|
       elsif spare?(frame)
         frames[i + 1][0]
       else
-        STRIKE_SECOND_THROW_SCORE
+        NO_BONUS_SCORE
       end
     elsif (i == 8)
       if strike?(frame) && strike?(frames[i + 1]) 
@@ -63,10 +65,10 @@ frames.each_with_index do |frame, i|
       elsif spare?(frame)
         frames[i + 1][0]
       else
-        STRIKE_SECOND_THROW_SCORE
+        NO_BONUS_SCORE
       end
     else
-      STRIKE_SECOND_THROW_SCORE
+      NO_BONUS_SCORE
     end
 end
 
