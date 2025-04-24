@@ -5,12 +5,13 @@ score = ARGV[0]
 
 scores = score.split(',')
 STRIKE_SCORE = 10
+STRIKE_SECOND_THROW_SCORE = 0
 
 shots = []
 scores.each do |s|
   if s == 'X'
     shots << STRIKE_SCORE
-    shots << 0
+    shots << STRIKE_SECOND_THROW_SCORE
   else
     shots << s.to_i
   end
@@ -37,30 +38,35 @@ def spare?(frame)
 end
 
 point = 0
+
+frames.each do |frame|
+  point += frame.sum
+end
+
 frames.each_with_index do |frame, i|
   point +=
     if (i < 8)
       if strike?(frame) && strike?(frames[i + 1])
-        frame.sum + frames[i + 1].sum + frames[i + 2][0]
+        frames[i + 1].sum + frames[i + 2][0]
       elsif strike?(frame) && not_strike?(frames[i + 1])
-        frame.sum + frames[i + 1].sum
+        frames[i + 1].sum
       elsif spare?(frame)
-        frame.sum + frames[i + 1][0]
+        frames[i + 1][0]
       else
-        frame.sum
+        STRIKE_SECOND_THROW_SCORE
       end
     elsif (i == 8)
       if strike?(frame) && strike?(frames[i + 1]) 
-        frame.sum + frames[i + 1][0] + frames[i + 1][2]
+        frames[i + 1][0] + frames[i + 1][2]
       elsif strike?(frame) && not_strike?(frames[i + 1])
-        frame.sum + frames[i + 1][0] + frames[i + 1][1]
+        frames[i + 1][0] + frames[i + 1][1]
       elsif spare?(frame)
-        frame.sum + frames[i + 1][0]
+        frames[i + 1][0]
       else
-        frame.sum
+        STRIKE_SECOND_THROW_SCORE
       end
     else
-      frame.sum
+      STRIKE_SECOND_THROW_SCORE
     end
 end
 
