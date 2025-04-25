@@ -34,7 +34,7 @@ def not_strike?(frame)
 end
 
 def spare?(frame)
-  frame.sum == STRIKE_SCORE
+  frame[0] != 10 && frame.sum == STRIKE_SCORE
 end
 
 point = 0
