@@ -36,7 +36,7 @@ end
 point = 0
 
 # frames.sum { |frame| frame.sum}と同じ意味
-point = frames.sum(&:sum)
+point += frames.sum(&:sum)
 
 NO_BONUS_SCORE = 0
 
