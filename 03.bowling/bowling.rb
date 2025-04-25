@@ -19,11 +19,7 @@ end
 
 frames = shots.each_slice(2).to_a
 
-if frames.length == 12
-  frames[-3..] = [frames[-3..].flatten]
-elsif frames.length == 11
-  frames[-2..] = [frames[-2..].flatten]
-end
+frames[9..] = [frames[9..].flatten]
 
 def strike?(frame)
   frame[0] == STRIKE_SCORE
