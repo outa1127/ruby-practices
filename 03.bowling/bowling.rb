@@ -39,9 +39,8 @@ end
 
 point = 0
 
-frames.each do |frame|
-  point += frame.sum
-end
+# frames.sum { |frame| frame.sum}と同じ意味
+point = frames.sum(&:sum)
 
 NO_BONUS_SCORE = 0
 
