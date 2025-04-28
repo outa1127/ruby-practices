@@ -14,10 +14,8 @@ def month_year(month, year)
   year ||= Date.today.year
   month ||= Date.today.month
 
-  # 月と年を表示する箇所
   puts "      #{month}月 #{year}"
 
-  # 曜日を表示する箇所
   puts "Su Mo Tu We Th Fr Sa"
 
   start_day = Date.new(year, month)
