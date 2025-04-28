@@ -18,7 +18,7 @@ end
 
 new_array.each do |inner_array|
   formatted_line = inner_array.compact.map do |element| # compactメソッドを使用することでnilの配列を排除してmap関数を実行することができる
-    element.ljust(10) # 左よせ10文字文のスペースでファイルを表示するようにする
+    element.ljust(15) # 左よせ15文字文のスペースでファイルを表示するようにする
   end
   puts formatted_line.join
 end
