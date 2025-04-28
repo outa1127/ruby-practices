@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-current_dir_content = Dir.children('.').sort
+current_dir_content = Dir.glob("*", File::FNM_DOTMATCH)
+
 three_children_array = current_dir_content.each_slice(3).to_a # 表示する列数を修正するときはここの数字を変更
 
 rows = three_children_array.length # 配列の数。[[1,2],[3,4],[5,6]]だったら3
