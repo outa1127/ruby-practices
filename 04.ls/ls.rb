@@ -4,14 +4,11 @@ current_dir_contents = Dir.glob("*", File::FNM_DOTMATCH)
 sliced_contents = current_dir_contents.each_slice(3).to_a
 rows = sliced_contents.length
 cols = sliced_contents.length >= 1 ? sliced_contents.first.length : 0
-indexed_contents = []
 
-cols.times do |col|
-  index_rows = []
-  rows.times do |row|
-    index_rows << sliced_contents[row][col]
+indexed_contents = Array.new(cols) do |col|
+  Array.new(rows) do |row|
+    sliced_contents[row][col]
   end
-  indexed_contents << index_rows
 end
 
 formatted_contents = indexed_contents.map do |index_content|
