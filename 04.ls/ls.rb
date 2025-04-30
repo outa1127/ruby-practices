@@ -14,9 +14,9 @@ cols.times do |col|
   index_contents << index_rows
 end
 
-index_contents.each do |index_content|
-  formatted_contents = index_content.compact.map do |element|
+formatted_contents = index_contents.map do |index_content|
+  index_content.compact.map do |element|
     element.ljust(15)
-  end
-  puts formatted_contents.join
+  end.join
 end
+puts formatted_contents
