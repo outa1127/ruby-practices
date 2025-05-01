@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
+opt = OptionParser.new
+opt.on('-a') { puts '-a option' }
+opt.parse(ARGV)
+
 current_dir_contents = Dir.glob("*", File::FNM_DOTMATCH)
 cols = 3
 rows = current_dir_contents.length >= 1 ? (current_dir_contents.size.to_f / cols).ceil : 0 # 5
