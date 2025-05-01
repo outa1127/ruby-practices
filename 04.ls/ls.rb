@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 current_dir_contents = Dir.glob("*", File::FNM_DOTMATCH)
-sliced_contents = current_dir_contents.each_slice(3).to_a
-rows = sliced_contents.length
-cols = sliced_contents.length >= 1 ? sliced_contents.first.length : 0
+cols = 3
+rows = current_dir_contents.length >= 1 ? (current_dir_contents.size.to_f / cols).ceil : 0 # 5
+sliced_contents = current_dir_contents.each_slice(rows).to_a
 
-indexed_contents = Array.new(cols) do |col|
-  Array.new(rows) do |row|
-    sliced_contents[row][col]
+indexed_contents = Array.new(rows) do |row|
+  Array.new(cols) do |col|
+    sliced_contents[col][row]
   end
 end
 
