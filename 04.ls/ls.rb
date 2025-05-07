@@ -5,11 +5,10 @@ require 'optparse'
 option_used = false
 
 def no_option
-  current_dir_contents = Dir.glob('*', File::FNM_DOTMATCH)
-  delete_secret_file_contents = current_dir_contents.reject { |current_dir_content| current_dir_content.start_with?('.') }
+  current_dir_contents = Dir.glob('*')
   cols = 3
-  rows = delete_secret_file_contents.length >= 1 ? (delete_secret_file_contents.size.to_f / cols).ceil : 0 # 5
-  sliced_contents = delete_secret_file_contents.each_slice(rows).to_a
+  rows = current_dir_contents.length >= 1 ? (current_dir_contents.size.to_f / cols).ceil : 0 # 5
+  sliced_contents = current_dir_contents.each_slice(rows).to_a
 
   indexed_contents = Array.new(rows) do |row|
     Array.new(cols) do |col|
