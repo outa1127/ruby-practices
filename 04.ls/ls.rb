@@ -2,8 +2,6 @@
 
 require 'optparse'
 
-option_used = false
-
 def formatting_contents(dir_contents)
   cols = 3
   rows = dir_contents.length >= 1 ? (dir_contents.size.to_f / cols).ceil : 0 # 5
@@ -23,12 +21,13 @@ def formatting_contents(dir_contents)
   puts formatted_contents
 end
 
+flags = 0
+
 OptionParser.new do |opt|
   opt.on('-a') do
-    option_used = true
-    formatting_contents(Dir.glob('*', File::FNM_DOTMATCH))
+    flags |= File::FNM_DOTMATCH
   end
   opt.parse!(ARGV)
 end
 
-formatting_contents(Dir.glob('*')) unless option_used
+formatting_contents(Dir.glob('*', flags))
