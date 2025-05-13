@@ -22,12 +22,15 @@ def formatting_contents(dir_contents)
 end
 
 flags = 0
+reverse_sort = false
 
 OptionParser.new do |opt|
-  opt.on('-a') do
-    flags |= File::FNM_DOTMATCH
-  end
+  opt.on('-a') { flags |= File::FNM_DOTMATCH }
+  opt.on('-r') { reverse_sort = true }
   opt.parse!(ARGV)
 end
 
-formatting_contents(Dir.glob('*', flags))
+sorted_contents = Dir.glob('*', flags).sort
+sorted_contents.reverse! if reverse_sort
+
+formatting_contents(sorted_contents)
