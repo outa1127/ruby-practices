@@ -22,13 +22,10 @@ def formatting_contents(dir_contents)
   puts formatted_contents
 end
 
-flags = 0
-reverse_sort = false
-
-def l_option
+def l_option(contents)
   calculation_block_size
 
-  Dir.glob('*').each do |content|
+  contents.each do |content|
     file_detail = File.stat(content)
     permission =  permission_file_type(file_detail.ftype) +
                   exec_permission(file_detail.mode.to_s(8).rjust(6, '0')[3..], file_detail.sticky?, file_detail.setuid?, file_detail.setgid?)
@@ -92,14 +89,22 @@ def formatting_last_update_date(last_updated_time)
   last_updated_time.strftime('%-m %d %H:%M')
 end
 
+flags = 0
+reverse_sort = false
+l_option_flag = false
+
 OptionParser.new do |opt|
   opt.on('-a') { flags |= File::FNM_DOTMATCH }
   opt.on('-r') { reverse_sort = true }
-  opt.on('-l') { l_option }
+  opt.on('-l') { l_option_flag = true }
   opt.parse!(ARGV)
 end
 
 sorted_contents = Dir.glob('*', flags).sort
 sorted_contents.reverse! if reverse_sort
 
-# formatting_contents(sorted_contents)
+if l_option_flag
+  l_option(sorted_contents)
+else
+  formatting_contents(sorted_contents)
+end
