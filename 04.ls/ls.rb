@@ -22,7 +22,7 @@ def formatting_contents(dir_contents)
   puts formatted_contents
 end
 
-def l_option(contents)
+def formatting_detaild_contents(contents)
   calculation_block_size(contents)
 
   contents.each do |content|
@@ -88,20 +88,20 @@ end
 
 flags = 0
 reverse_sort = false
-l_option_flag = false
+detaild_contents_flag = false
 
 OptionParser.new do |opt|
   opt.on('-a') { flags |= File::FNM_DOTMATCH }
   opt.on('-r') { reverse_sort = true }
-  opt.on('-l') { l_option_flag = true }
+  opt.on('-l') { detaild_contents_flag = true }
   opt.parse!(ARGV)
 end
 
 sorted_contents = Dir.glob('*', flags).sort
 sorted_contents.reverse! if reverse_sort
 
-if l_option_flag
-  l_option(sorted_contents)
+if detaild_contents_flag
+  formatting_detaild_contents(sorted_contents)
 else
   formatting_contents(sorted_contents)
 end
