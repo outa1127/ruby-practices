@@ -42,11 +42,8 @@ def l_option(contents)
 end
 
 def calculation_block_size(contents)
-  total_block_size = 0
-  contents.each do |content|
-    content_block_size = File.stat(content).blocks
-    total_block_size += content_block_size
-  end
+  block_sizes = contents.map { |content| File.stat(content).blocks }
+  total_block_size = block_sizes.sum
   puts "total #{total_block_size}"
 end
 
