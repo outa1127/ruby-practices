@@ -23,7 +23,7 @@ def formatting_contents(dir_contents)
 end
 
 def l_option(contents)
-  calculation_block_size
+  calculation_block_size(contents)
 
   contents.each do |content|
     file_detail = File.stat(content)
@@ -31,7 +31,7 @@ def l_option(contents)
                   exec_permission(file_detail.mode.to_s(8).rjust(6, '0')[3..], file_detail.sticky?, file_detail.setuid?, file_detail.setgid?)
     puts [
       permission,
-      file_detail.nlink,
+      file_detail.nlink.to_s.rjust(2, ' '),
       Etc.getpwuid(file_detail.uid).name,
       Etc.getgrgid(file_detail.gid).name,
       file_detail.size.to_s.rjust(4, ' '),
@@ -41,9 +41,9 @@ def l_option(contents)
   end
 end
 
-def calculation_block_size
+def calculation_block_size(contents)
   total_block_size = 0
-  Dir.glob('*').each do |content|
+  contents.each do |content|
     content_block_size = File.stat(content).blocks
     total_block_size += content_block_size
   end
