@@ -27,7 +27,7 @@ def formatting_detaild_contents(contents)
 
   contents.each do |content|
     file_detail = File.stat(content)
-    permission =  permission_file_type(file_detail.ftype) +
+    permission =  permission_file_type(file_detail.ftype.to_sym) +
                   exec_permission(file_detail.mode.to_s(8).rjust(6, '0')[3..], file_detail.sticky?, file_detail.setuid?, file_detail.setgid?)
     puts [
       permission,
@@ -49,13 +49,13 @@ end
 
 def permission_file_type(file)
   file_type = {
-    'fifo' => 'p',
-    'characterSpecial' => 'c',
-    'directory' => 'd',
-    'blockSpecial' => 'b',
-    'file' => '-',
-    'link' => 'l',
-    'socket' => 's'
+    fifo: 'p',
+    characterSpecial: 'c',
+    directory: 'd',
+    blockSpecial: 'b',
+    file: '-',
+    link: 'l',
+    socket: 's'
   }
   file_type[file]
 end
