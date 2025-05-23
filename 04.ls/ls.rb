@@ -60,23 +60,23 @@ def permission_file_type(file)
   file_type[file]
 end
 
-def exec_permission(permission, sticky_flag, set_user_id_flag, set_group_id_flag)
-  owner_index = 0
-  group_index = 1
-  others_index = 2
-  exec_permission_index = 2
+OWNER_INDEX = 0
+GROUP_INDEX = 1
+OTHERS_INDEX = 2
+EXEC_PERMISSION_INDEX = 2
 
+def exec_permission(permission, sticky_flag, set_user_id_flag, set_group_id_flag)
   permission_array = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
   perms = permission.each_char.map { |d| permission_array[d.to_i].dup }
   special_perms = [
-    [sticky_flag, owner_index, 't', 'T'],
-    [set_user_id_flag, others_index, 's', 'S'],
-    [set_group_id_flag, group_index, 's', 'S']
+    [sticky_flag, OWNER_INDEX, 't', 'T'],
+    [set_user_id_flag, OTHERS_INDEX, 's', 'S'],
+    [set_group_id_flag, GROUP_INDEX, 's', 'S']
   ]
   special_perms.each do |flag, target_index, exec_char, noexec_char|
     next unless flag
 
-    perms[target_index][exec_permission_index] = perms[target_index][exec_permission_index] == 'x' ? exec_char : noexec_char
+    perms[target_index][EXEC_PERMISSION_INDEX] = perms[target_index][EXEC_PERMISSION_INDEX] == 'x' ? exec_char : noexec_char
   end
 
   perms.join
