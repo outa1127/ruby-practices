@@ -3,6 +3,11 @@
 require 'optparse'
 require 'etc'
 
+OWNER_INDEX = 0
+GROUP_INDEX = 1
+OTHERS_INDEX = 2
+EXEC_PERMISSION_INDEX = 2
+
 def formatting_contents(dir_contents)
   cols = 3
   rows = dir_contents.length >= 1 ? (dir_contents.size.to_f / cols).ceil : 0 # 5
@@ -59,11 +64,6 @@ def permission_file_type(file)
   }
   file_type[file]
 end
-
-OWNER_INDEX = 0
-GROUP_INDEX = 1
-OTHERS_INDEX = 2
-EXEC_PERMISSION_INDEX = 2
 
 def exec_permission(permission, sticky_flag, set_user_id_flag, set_group_id_flag)
   permission_array = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
