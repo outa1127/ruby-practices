@@ -88,19 +88,19 @@ end
 
 flags = 0
 reverse_sort = false
-detaild_contents_flag = false
+detailed_contents_flag = false
 
 OptionParser.new do |opt|
   opt.on('-a') { flags |= File::FNM_DOTMATCH }
   opt.on('-r') { reverse_sort = true }
-  opt.on('-l') { detaild_contents_flag = true }
+  opt.on('-l') { detailed_contents_flag = true }
   opt.parse!(ARGV)
 end
 
 sorted_contents = Dir.glob('*', flags).sort
 sorted_contents.reverse! if reverse_sort
 
-if detaild_contents_flag
+if detailed_contents_flag
   formatting_detaild_contents(sorted_contents)
 else
   formatting_contents(sorted_contents)
