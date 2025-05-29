@@ -2,6 +2,12 @@
 
 require 'optparse'
 
+OPTION_FLAG_TO_STAT_KEY = {
+  l: :lines,
+  w: :words,
+  c: :bytes
+}.freeze
+
 def main
   if !ARGV.empty?
     option_flag = parse_options
@@ -13,16 +19,27 @@ def main
   end
 end
 
+def parse_options
+  opt = OptionParser.new
+  params = { l: false, w: false, c: false }
+  opt.on('-l') { params[:l] = true }
+  opt.on('-w') { params[:w] = true }
+  opt.on('-c') { params[:c] = true }
+
+  opt.parse!(ARGV)
+  params.values.any? ? params : { l: true, w: true, c: true }
+end
+
 def print_stats_from_stdin
   input = $stdin.read
 
-  print_stats_pipe = []
-  print_stats_pipe << print_line(input)
-  print_stats_pipe << print_word(input)
-  print_stats_pipe << print_byte(input)
+  stats = [
+    print_line(input),
+    print_word(input),
+    print_byte(input)
+  ]
 
-  print_stats_pipe_formatted = print_stats_pipe.map { |stat| format_stat(stat) }.join
-  puts print_stats_pipe_formatted
+  puts stats.map { |stat| format_stat(stat) }.join
 end
 
 def print_line(input)
@@ -37,17 +54,6 @@ def print_byte(input)
   input.size
 end
 
-def parse_options
-  opt = OptionParser.new
-  params = { l: false, w: false, c: false }
-  opt.on('-l') { params[:l] = true }
-  opt.on('-w') { params[:w] = true }
-  opt.on('-c') { params[:c] = true }
-
-  opt.parse!(ARGV)
-  params.values.any? ? params : { l: true, w: true, c: true }
-end
-
 def format_stat(value)
   value.to_s.rjust(8)
 end
@@ -59,49 +65,46 @@ def process_files(option_flag)
 
   input_files.each do |input_file|
     file_content = File.read(input_file)
-    stats = print_stats(file_content, input_file, option_flag)
+    stats = collect_stats(file_content, input_file)
+    print_stats(stats, option_flag, input_file)
     calculate_stats(totals, stats)
   end
 
   return unless ARGV.size >= 2
 
-  flag_to_key = { l: :lines, w: :words, c: :bytes }
-  total_stats_string_format = flag_to_key.map do |flag_key, total_key|
-    format_stat(totals[total_key]) if option_flag[flag_key]
-  end
-
-  puts "#{total_stats_string_format.join} total"
+  print_total_stats(totals, option_flag)
 end
 
-def print_stats(file_content, input_file, option_flag)
-  lines = print_line(file_content)
-  words = print_word(file_content)
-  bytes = File.size(input_file)
+def collect_stats(file_content, input_file)
+  {
+    lines: print_line(file_content),
+    words: print_word(file_content),
+    bytes: File.size(input_file)
+  }
+end
 
-  stats_values = {}
+def print_stats(stats, option_flag, input_file)
   stats_display = []
 
-  value_refalence = [
-    [:l, lines, :lines],
-    [:w, words, :words],
-    [:c, bytes, :bytes]
-  ]
-
-  value_refalence.each do |flag_key, stats_value, stats_key|
-    if option_flag[flag_key]
-      stats_values[stats_key] = stats_value
-      stats_display << format_stat(stats_value)
-    end
+  OPTION_FLAG_TO_STAT_KEY.each do |flag_key, stat_key|
+    stats_display << format_stat(stats[stat_key]) if option_flag[flag_key]
   end
 
   puts "#{stats_display.join} #{input_file}"
-  stats_values
 end
 
 def calculate_stats(totals, stats)
   totals.each_key do |key|
-    totals[key] += stats[key] if stats[key]
+    totals[key] += stats[key]
   end
+end
+
+def print_total_stats(totals, option_flag)
+  total_stats_string_format = OPTION_FLAG_TO_STAT_KEY.map do |flag_key, stat_key|
+    format_stat(totals[stat_key]) if option_flag[flag_key]
+  end
+
+  puts "#{total_stats_string_format.join} total"
 end
 
 main
