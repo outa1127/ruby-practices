@@ -9,11 +9,11 @@ OPTION_FLAG_TO_STAT_KEY = {
 }.freeze
 
 def main
+  option_flag = parse_options
   if !ARGV.empty?
-    option_flag = parse_options
     process_files(option_flag)
   elsif !$stdin.tty?
-    print_stats_from_stdin
+    print_stats_from_stdin(option_flag)
   else
     exit
   end
@@ -30,16 +30,19 @@ def parse_options
   params.values.any? ? params : { l: true, w: true, c: true }
 end
 
-def print_stats_from_stdin
+def print_stats_from_stdin(option_flag)
   input = $stdin.read
 
-  stats = [
-    print_line(input),
-    print_word(input),
-    print_byte(input)
-  ]
+  stats = {
+    lines: print_line(input),
+    words: print_word(input),
+    bytes: print_byte(input)
+  }
+  formatted_stats = OPTION_FLAG_TO_STAT_KEY.map do |flag_key, stats_key|
+    format_stat(stats[stats_key]) if option_flag[flag_key]
+  end
 
-  puts stats.map { |stat| format_stat(stat) }.join
+  puts formatted_stats.join
 end
 
 def print_line(input)
