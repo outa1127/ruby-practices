@@ -3,12 +3,17 @@
 require 'optparse'
 
 def main
-  option_flag = parse_args
-  word_count(option_flag)
-  pipe_method if ARGV.empty?
+  if !ARGV.empty?
+    option_flag = parse_options
+    process_files(option_flag)
+  elsif !$stdin.tty?
+    print_stats_from_stdin
+  else
+    exit
+  end
 end
 
-def pipe_method
+def print_stats_from_stdin
   input = $stdin.read
 
   print_stats_pipe = []
@@ -32,7 +37,7 @@ def print_byte(input)
   input.size
 end
 
-def parse_args
+def parse_options
   opt = OptionParser.new
   params = { l: false, w: false, c: false }
   opt.on('-l') { params[:l] = true }
@@ -47,20 +52,15 @@ def format_stat(value)
   value.to_s.rjust(8)
 end
 
-def word_count(option_flag)
-  return if ARGV.empty?
-
+def process_files(option_flag)
   input_files = ARGV
 
   totals = { lines: 0, words: 0, bytes: 0 }
 
   input_files.each do |input_file|
-    content = File.read(input_file)
-    stats = print_stats(content, input_file, option_flag)
-
-    totals.each_key do |key|
-      totals[key] += stats[key] if stats[key]
-    end
+    file_content = File.read(input_file)
+    stats = print_stats(file_content, input_file, option_flag)
+    calculate_stats(totals, stats)
   end
 
   return unless ARGV.size >= 2
@@ -73,9 +73,9 @@ def word_count(option_flag)
   puts "#{total_stats_string_format.join} total"
 end
 
-def print_stats(content, input_file, option_flag)
-  lines = print_line(content)
-  words = print_word(content)
+def print_stats(file_content, input_file, option_flag)
+  lines = print_line(file_content)
+  words = print_word(file_content)
   bytes = File.size(input_file)
 
   stats_values = {}
@@ -90,13 +90,18 @@ def print_stats(content, input_file, option_flag)
   value_refalence.each do |flag_key, stats_value, stats_key|
     if option_flag[flag_key]
       stats_values[stats_key] = stats_value
-      stats_display << stats_value
+      stats_display << format_stat(stats_value)
     end
   end
 
-  stats_display_format = stats_display.map { |stat| format_stat(stat) }.join
-  puts "#{stats_display_format} #{input_file}"
+  puts "#{stats_display.join} #{input_file}"
   stats_values
+end
+
+def calculate_stats(totals, stats)
+  totals.each_key do |key|
+    totals[key] += stats[key] if stats[key]
+  end
 end
 
 main
