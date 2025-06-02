@@ -28,7 +28,7 @@ class Game
       end
     end
 
-    shots[9..] = [shots[9..].flatten]
+    shots[9..] = [shots[9..].flatten[0..2]]
     shots
   end
 
