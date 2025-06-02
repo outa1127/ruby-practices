@@ -4,44 +4,39 @@
 require_relative 'frame'
 
 class Game
-  attr_reader :results
-
   def initialize(results)
     @results = results
 
-    new_frames = result_to_frame(formatting_results)
+    formatted_frames = separate_results_per_frame
 
-    @frames = new_frames.map do |frame|
+    @frames = formatted_frames.map do |frame|
       Frame.new(*frame)
     end
   end
 
-  def formatting_results
+  def separate_results_per_frame
     shots = []
-    results.map do |result|
-      if result == 'X'
-        shots << STRIKE_SCORE
-        shots << :no_score
+    shot_index = 0
+
+    while shot_index < @results.size
+      if @results[shot_index] == 'X'
+        shots << [STRIKE_SCORE]
+        shot_index += 1
       else
-        shots << result.to_i
+        shots << [@results[shot_index], @results[shot_index + 1]]
+        shot_index += 2
       end
     end
 
+    shots[9..] = [shots[9..].flatten]
     shots
   end
 
-  def result_to_frame(format_result)
-    frames = format_result.each_slice(2).to_a
-    format_frames = frames.map { |frame| frame.reject { |value| value == :no_score } }
-    format_frames[9..] = [format_frames[9..].flatten]
-    format_frames
-  end
-
   def total_score
-    total_score = @frames.map.with_index do |frame, index|
+    score_per_frame = @frames.map.with_index do |frame, index|
       frame.score(@frames, index)
     end
-    total_score.sum
+    score_per_frame.sum
   end
 end
 

@@ -3,6 +3,8 @@
 
 require_relative 'shot'
 
+STRIKE_SCORE = 10
+
 class Frame
   attr_reader :first_shot, :second_shot, :third_shot
 
@@ -12,16 +14,20 @@ class Frame
     @third_shot = Shot.new(third_mark)
   end
 
+  def shots
+    [first_shot.score, second_shot.score, third_shot.score]
+  end
+
   def strike?
-    first_shot.score == STRIKE_SCORE
+    shots[0] == STRIKE_SCORE
   end
 
   def not_strike?
-    first_shot.score != STRIKE_SCORE
+    shots[0] != STRIKE_SCORE
   end
 
   def spare?
-    not_strike? && [first_shot.score, second_shot.score, third_shot.score].sum == 10
+    not_strike? && shots.sum == 10
   end
 
   def strike_bonus(frames, index)
@@ -44,7 +50,7 @@ class Frame
   end
 
   def score(frames, index)
-    base_score = [first_shot.score, second_shot.score, third_shot.score].sum
+    base_score = shots.sum
     return base_score if index >= 9
 
     bonus_score = if strike?
