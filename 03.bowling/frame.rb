@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require_relative 'shot'
@@ -6,8 +5,6 @@ require_relative 'shot'
 STRIKE_SCORE = 10
 
 class Frame
-  attr_reader :first_shot, :second_shot, :third_shot
-
   def initialize(first_mark, second_mark = 0, third_mark = 0)
     @first_shot = Shot.new(first_mark)
     @second_shot = Shot.new(second_mark)
@@ -15,7 +12,7 @@ class Frame
   end
 
   def shots
-    [first_shot.score, second_shot.score, third_shot.score]
+    [@first_shot.score, @second_shot.score, @third_shot.score]
   end
 
   def strike?
@@ -34,19 +31,15 @@ class Frame
     next_frame = frames[index + 1]
     after_next_frame = frames[index + 2]
 
-    if next_frame.strike?
-      if index == 8
-        next_frame.first_shot.score + next_frame.second_shot.score
-      else
-        next_frame.first_shot.score + after_next_frame.first_shot.score
-      end
-    elsif next_frame.not_strike?
-      next_frame.first_shot.score + next_frame.second_shot.score
+    if next_frame.strike? && index != 8
+      next_frame.shots[0] + after_next_frame.shots[0]
+    else
+      next_frame.shots[0..1].sum
     end
   end
 
   def spare_bonus(frames, index)
-    frames[index + 1].first_shot.score
+    frames[index + 1].shots[0]
   end
 
   def score(frames, index)
