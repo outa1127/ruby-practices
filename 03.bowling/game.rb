@@ -38,7 +38,6 @@ class Game
   end
 
   def total_score
-    # total_score = @frames.map(&:score).sum
     total_score = @frames.map.with_index do |frame, index|
       frame.score(@frames, index)
     end
