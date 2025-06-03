@@ -3,11 +3,11 @@
 require 'optparse'
 
 def main
-  option_flag = parse_options
+  options = parse_options
   if !ARGV.empty?
-    process_files(option_flag)
+    process_files(options)
   elsif !$stdin.tty?
-    print_stats_from_stdin(option_flag)
+    print_stats_from_stdin(options)
   else
     exit
   end
@@ -24,7 +24,7 @@ def parse_options
   params.values.any? ? params : { lines: true, words: true, bytes: true }
 end
 
-def print_stats_from_stdin(option_flag)
+def print_stats_from_stdin(options)
   input = $stdin.read
 
   stats = {
@@ -34,7 +34,7 @@ def print_stats_from_stdin(option_flag)
   }
 
   formatted_stats = stats.map do |key, value|
-    format_stat(value) if option_flag[key]
+    format_stat(value) if options[key]
   end
 
   puts formatted_stats.join
@@ -56,7 +56,7 @@ def format_stat(value)
   value.to_s.rjust(8)
 end
 
-def process_files(option_flag)
+def process_files(options)
   input_files = ARGV
 
   totals = { lines: 0, words: 0, bytes: 0 }
@@ -64,13 +64,13 @@ def process_files(option_flag)
   input_files.each do |input_file|
     file_content = File.read(input_file)
     stats = collect_stats(file_content, input_file)
-    print_stats(stats, option_flag, input_file)
+    print_stats(stats, options, input_file)
     calculate_stats(totals, stats)
   end
 
   return unless ARGV.size >= 2
 
-  print_total_stats(totals, option_flag)
+  print_total_stats(totals, options)
 end
 
 def collect_stats(file_content, input_file)
@@ -81,10 +81,10 @@ def collect_stats(file_content, input_file)
   }
 end
 
-def print_stats(stats, option_flag, input_file)
+def print_stats(stats, options, input_file)
   stats_display = []
   stats.each do |key, value|
-    stats_display << format_stat(value) if option_flag[key]
+    stats_display << format_stat(value) if options[key]
   end
 
   puts "#{stats_display.join} #{input_file}"
@@ -96,9 +96,9 @@ def calculate_stats(totals, stats)
   end
 end
 
-def print_total_stats(totals, option_flag)
+def print_total_stats(totals, options)
   total_stats_string_format = totals.map do |key, value|
-    format_stat(value) if option_flag[key]
+    format_stat(value) if options[key]
   end
 
   puts "#{total_stats_string_format.join} total"
