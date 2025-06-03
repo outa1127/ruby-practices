@@ -2,12 +2,6 @@
 
 require 'optparse'
 
-OPTION_FLAG_TO_STAT_KEY = {
-  l: :lines,
-  w: :words,
-  c: :bytes
-}.freeze
-
 def main
   option_flag = parse_options
   if !ARGV.empty?
@@ -22,12 +16,12 @@ end
 def parse_options
   opt = OptionParser.new
   params = { l: false, w: false, c: false }
-  opt.on('-l') { params[:l] = true }
-  opt.on('-w') { params[:w] = true }
-  opt.on('-c') { params[:c] = true }
+  opt.on('-l') { params[:lines] = true }
+  opt.on('-w') { params[:words] = true }
+  opt.on('-c') { params[:bytes] = true }
 
   opt.parse!(ARGV)
-  params.values.any? ? params : { l: true, w: true, c: true }
+  params.values.any? ? params : { lines: true, words: true, bytes: true }
 end
 
 def print_stats_from_stdin(option_flag)
@@ -38,8 +32,9 @@ def print_stats_from_stdin(option_flag)
     words: print_word(input),
     bytes: print_byte(input)
   }
-  formatted_stats = OPTION_FLAG_TO_STAT_KEY.map do |flag_key, stats_key|
-    format_stat(stats[stats_key]) if option_flag[flag_key]
+
+  formatted_stats = stats.map do |key, value|
+    format_stat(value) if option_flag[key]
   end
 
   puts formatted_stats.join
@@ -88,9 +83,8 @@ end
 
 def print_stats(stats, option_flag, input_file)
   stats_display = []
-
-  OPTION_FLAG_TO_STAT_KEY.each do |flag_key, stat_key|
-    stats_display << format_stat(stats[stat_key]) if option_flag[flag_key]
+  stats.each do |key, value|
+    stats_display << format_stat(value) if option_flag[key]
   end
 
   puts "#{stats_display.join} #{input_file}"
@@ -103,8 +97,8 @@ def calculate_stats(totals, stats)
 end
 
 def print_total_stats(totals, option_flag)
-  total_stats_string_format = OPTION_FLAG_TO_STAT_KEY.map do |flag_key, stat_key|
-    format_stat(totals[stat_key]) if option_flag[flag_key]
+  total_stats_string_format = totals.map do |key, value|
+    format_stat(value) if option_flag[key]
   end
 
   puts "#{total_stats_string_format.join} total"
