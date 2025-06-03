@@ -5,9 +5,11 @@ require 'optparse'
 def main
   options = parse_options
   if !ARGV.empty?
-    process_files(options)
-  elsif !$stdin.tty?
-    print_stats_from_stdin(options)
+    input_files = ARGV
+    process_files(options, input_files)
+  elsif from_pipe?
+    input_files = [$stdin.read]
+    process_files(options, input_files)
   else
     exit
   end
@@ -24,20 +26,8 @@ def parse_options
   params.values.any? ? params : { lines: true, words: true, bytes: true }
 end
 
-def print_stats_from_stdin(options)
-  input = $stdin.read
-
-  stats = {
-    lines: count_line(input),
-    words: count_word(input),
-    bytes: count_byte(input)
-  }
-
-  formatted_stats = stats.map do |key, value|
-    format_stat(value) if options[key]
-  end
-
-  puts formatted_stats.join
+def from_pipe?
+  !$stdin.tty?
 end
 
 def count_line(input)
@@ -56,13 +46,11 @@ def format_stat(value)
   value.to_s.rjust(8)
 end
 
-def process_files(options)
-  input_files = ARGV
-
+def process_files(options, input_files)
   totals = { lines: 0, words: 0, bytes: 0 }
 
   input_files.each do |input_file|
-    file_content = File.read(input_file)
+    file_content = from_pipe? ? input_file : File.read(input_file)
     stats = collect_stats(file_content, input_file)
     print_stats(stats, options, input_file)
     totals = calculate_stats(totals, stats)
@@ -77,7 +65,7 @@ def collect_stats(file_content, input_file)
   {
     lines: count_line(file_content),
     words: count_word(file_content),
-    bytes: File.size(input_file)
+    bytes: from_pipe? ? count_byte(file_content) : File.size(input_file)
   }
 end
 
@@ -86,7 +74,11 @@ def print_stats(stats, options, input_file = 'total')
     format_stat(value) if options[key]
   end
 
-  puts "#{formatted_stats.join} #{input_file}"
+  if from_pipe?
+    puts formatted_stats.join
+  else
+    puts "#{formatted_stats.join} #{input_file}"
+  end
 end
 
 def calculate_stats(totals, stats)
