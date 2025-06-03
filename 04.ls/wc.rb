@@ -40,15 +40,15 @@ def print_stats_from_stdin(options)
   puts formatted_stats.join
 end
 
-def print_line(input)
+def count_line(input)
   input.count("\n")
 end
 
-def print_word(input)
+def count_word(input)
   input.split(/\s+/).size
 end
 
-def print_byte(input)
+def count_byte(input)
   input.size
 end
 
