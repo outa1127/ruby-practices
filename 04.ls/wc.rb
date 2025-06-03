@@ -28,9 +28,9 @@ def print_stats_from_stdin(options)
   input = $stdin.read
 
   stats = {
-    lines: print_line(input),
-    words: print_word(input),
-    bytes: print_byte(input)
+    lines: count_line(input),
+    words: count_word(input),
+    bytes: count_byte(input)
   }
 
   formatted_stats = stats.map do |key, value|
@@ -65,7 +65,7 @@ def process_files(options)
     file_content = File.read(input_file)
     stats = collect_stats(file_content, input_file)
     print_stats(stats, options, input_file)
-    calculate_stats(totals, stats)
+    totals = calculate_stats(totals, stats)
   end
 
   return unless ARGV.size >= 2
@@ -75,8 +75,8 @@ end
 
 def collect_stats(file_content, input_file)
   {
-    lines: print_line(file_content),
-    words: print_word(file_content),
+    lines: count_line(file_content),
+    words: count_word(file_content),
     bytes: File.size(input_file)
   }
 end
@@ -91,9 +91,7 @@ def print_stats(stats, options, input_file)
 end
 
 def calculate_stats(totals, stats)
-  totals.each_key do |key|
-    totals[key] += stats[key]
-  end
+  totals.merge(stats) { |_key, base_value, add_value| base_value + add_value }
 end
 
 def print_total_stats(totals, options)
