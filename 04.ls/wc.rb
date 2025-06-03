@@ -70,7 +70,7 @@ def process_files(options)
 
   return unless ARGV.size >= 2
 
-  print_total_stats(totals, options)
+  print_stats(totals, options)
 end
 
 def collect_stats(file_content, input_file)
@@ -81,25 +81,16 @@ def collect_stats(file_content, input_file)
   }
 end
 
-def print_stats(stats, options, input_file)
-  stats_display = []
-  stats.each do |key, value|
-    stats_display << format_stat(value) if options[key]
+def print_stats(stats, options, input_file = 'total')
+  formatted_stats = stats.map do |key, value|
+    format_stat(value) if options[key]
   end
 
-  puts "#{stats_display.join} #{input_file}"
+  puts "#{formatted_stats.join} #{input_file}"
 end
 
 def calculate_stats(totals, stats)
   totals.merge(stats) { |_key, base_value, add_value| base_value + add_value }
-end
-
-def print_total_stats(totals, options)
-  total_stats_string_format = totals.map do |key, value|
-    format_stat(value) if options[key]
-  end
-
-  puts "#{total_stats_string_format.join} total"
 end
 
 main
