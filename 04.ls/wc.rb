@@ -17,7 +17,7 @@ end
 
 def parse_options
   opt = OptionParser.new
-  params = { l: false, w: false, c: false }
+  params = { lines: false, words: false, bytes: false }
   opt.on('-l') { params[:lines] = true }
   opt.on('-w') { params[:words] = true }
   opt.on('-c') { params[:bytes] = true }
