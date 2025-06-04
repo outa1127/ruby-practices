@@ -3,12 +3,23 @@
 require 'optparse'
 
 def main
+  p $stdin.isatty
   options = parse_options
   if !ARGV.empty?
-    input_files = ARGV
+    input_files = ARGV.map do |file|
+      {
+        name: file,
+        text: File.read(file)
+      }
+    end
     process_files(options, input_files)
-  elsif from_pipe?
-    input_files = [$stdin.read]
+  elsif !$stdin.tty?
+    input_files = [
+      {
+        name: '',
+        text: $stdin.read
+      }
+    ]
     process_files(options, input_files)
   else
     exit
@@ -24,10 +35,6 @@ def parse_options
 
   opt.parse!(ARGV)
   params.values.any? ? params : { lines: true, words: true, bytes: true }
-end
-
-def from_pipe?
-  !$stdin.tty?
 end
 
 def count_line(input)
@@ -50,39 +57,31 @@ def process_files(options, input_files)
   totals = { lines: 0, words: 0, bytes: 0 }
 
   input_files.each do |input_file|
-    file_content = from_pipe? ? input_file : File.read(input_file)
-    stats = collect_stats(file_content, input_file)
-    print_stats(stats, options, input_file)
-    totals = calculate_stats(totals, stats)
+    stats = collect_stats(input_file)
+    print_stats(stats, options, input_file[:name])
+    totals[:lines] += stats[:lines]
+    totals[:words] += stats[:words]
+    totals[:bytes] += stats[:bytes]
   end
 
   return unless ARGV.size >= 2
 
-  print_stats(totals, options)
+  print_stats(totals, options, 'total')
 end
 
-def collect_stats(file_content, input_file)
+def collect_stats(input_file)
   {
-    lines: count_line(file_content),
-    words: count_word(file_content),
-    bytes: from_pipe? ? count_byte(file_content) : File.size(input_file)
+    lines: count_line(input_file[:text]),
+    words: count_word(input_file[:text]),
+    bytes: count_byte(input_file[:text])
   }
 end
 
-def print_stats(stats, options, input_file = 'total')
+def print_stats(stats, options, input_file)
   formatted_stats = stats.map do |key, value|
     format_stat(value) if options[key]
   end
-
-  if from_pipe?
-    puts formatted_stats.join
-  else
-    puts "#{formatted_stats.join} #{input_file}"
-  end
-end
-
-def calculate_stats(totals, stats)
-  totals.merge(stats) { |_key, base_value, add_value| base_value + add_value }
+  puts "#{formatted_stats.join} #{input_file}"
 end
 
 main
