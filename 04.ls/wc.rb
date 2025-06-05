@@ -74,8 +74,9 @@ def format_stat(value)
 end
 
 def print_stats(stats, options, input_file)
-  formatted_stats = stats.map do |key, value|
-    format_stat(value) if options[key]
+  stats_order = %i[lines words bytes]
+  formatted_stats = stats_order.map do |key|
+    format_stat(stats[key]) if options[key]
   end
   puts "#{formatted_stats.join} #{input_file}"
 end
