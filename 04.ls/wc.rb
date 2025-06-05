@@ -33,22 +33,6 @@ def parse_options
   params.values.any? ? params : { lines: true, words: true, bytes: true }
 end
 
-def count_line(input)
-  input.count("\n")
-end
-
-def count_word(input)
-  input.split(/\s+/).size
-end
-
-def count_byte(input)
-  input.size
-end
-
-def format_stat(value)
-  value.to_s.rjust(8)
-end
-
 def process_files(options, input_files)
   totals = { lines: 0, words: 0, bytes: 0 }
 
@@ -71,6 +55,22 @@ def collect_stats(input_file)
     words: count_word(input_file[:text]),
     bytes: count_byte(input_file[:text])
   }
+end
+
+def count_line(input)
+  input.count("\n")
+end
+
+def count_word(input)
+  input.split(/\s+/).size
+end
+
+def count_byte(input)
+  input.size
+end
+
+def format_stat(value)
+  value.to_s.rjust(8)
 end
 
 def print_stats(stats, options, input_file)
