@@ -4,21 +4,14 @@ require 'optparse'
 
 def main
   options = parse_options
-  input_files = if ARGV.any?
-                  ARGV.map do |file|
-                    {
-                      name: file,
-                      text: File.read(file)
-                    }
-                  end
-                else
-                  [
-                    {
-                      name: '',
-                      text: $stdin.read
-                    }
-                  ]
-                end
+  input_files =
+    if ARGV.any?
+      ARGV.map do |file|
+        { name: file, text: File.read(file) }
+      end
+    else
+      [{ name: '', text: $stdin.read }]
+    end
   process_files(options, input_files)
 end
 
