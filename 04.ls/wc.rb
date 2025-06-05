@@ -4,7 +4,7 @@ require 'optparse'
 
 def main
   options = parse_options
-  input_files = if !ARGV.empty?
+  input_files = if ARGV.any?
                   ARGV.map do |file|
                     {
                       name: file,
