@@ -27,11 +27,11 @@ def parse_options
 end
 
 def process_files(options, input_files)
-  totals = { lines: 0, words: 0, bytes: 0 }
+  totals = { lines: 0, words: 0, bytes: 0, name: 'total' }
 
   input_files.each do |input_file|
     stats = collect_stats(input_file)
-    print_stats(stats, options, input_file[:name])
+    print_stats(stats, options)
     totals[:lines] += stats[:lines]
     totals[:words] += stats[:words]
     totals[:bytes] += stats[:bytes]
@@ -39,14 +39,15 @@ def process_files(options, input_files)
 
   return unless ARGV.size >= 2
 
-  print_stats(totals, options, 'total')
+  print_stats(totals, options)
 end
 
 def collect_stats(input_file)
   {
     lines: count_line(input_file[:text]),
     words: count_word(input_file[:text]),
-    bytes: count_byte(input_file[:text])
+    bytes: count_byte(input_file[:text]),
+    name: input_file[:name]
   }
 end
 
@@ -62,11 +63,11 @@ def count_byte(input)
   input.size
 end
 
-def print_stats(stats, options, input_file)
+def print_stats(stats, options)
   formatted_stats = %i[lines words bytes].map do |key|
     format_stat(stats[key]) if options[key]
   end
-  puts "#{formatted_stats.join} #{input_file}"
+  puts "#{formatted_stats.join} #{stats[:name]}"
 end
 
 def format_stat(value)
