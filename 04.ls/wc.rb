@@ -62,16 +62,15 @@ def count_byte(input)
   input.size
 end
 
-def format_stat(value)
-  value.to_s.rjust(8)
-end
-
 def print_stats(stats, options, input_file)
-  stats_order = %i[lines words bytes]
-  formatted_stats = stats_order.map do |key|
+  formatted_stats = %i[lines words bytes].map do |key|
     format_stat(stats[key]) if options[key]
   end
   puts "#{formatted_stats.join} #{input_file}"
+end
+
+def format_stat(value)
+  value.to_s.rjust(8)
 end
 
 main
