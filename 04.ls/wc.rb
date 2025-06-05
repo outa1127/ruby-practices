@@ -3,27 +3,23 @@
 require 'optparse'
 
 def main
-  p $stdin.isatty
   options = parse_options
-  if !ARGV.empty?
-    input_files = ARGV.map do |file|
-      {
-        name: file,
-        text: File.read(file)
-      }
-    end
-    process_files(options, input_files)
-  elsif !$stdin.tty?
-    input_files = [
-      {
-        name: '',
-        text: $stdin.read
-      }
-    ]
-    process_files(options, input_files)
-  else
-    exit
-  end
+  input_files = if !ARGV.empty?
+                  ARGV.map do |file|
+                    {
+                      name: file,
+                      text: File.read(file)
+                    }
+                  end
+                else
+                  [
+                    {
+                      name: '',
+                      text: $stdin.read
+                    }
+                  ]
+                end
+  process_files(options, input_files)
 end
 
 def parse_options
