@@ -21,13 +21,14 @@ class Game
 
       next if index >= 9
 
-      total_score += if frame.strike?
-                       calculate_strike_bonus(index)
-                     elsif frame.spare?
-                       calculate_spare_bonus(index)
-                     else
-                       0
-                     end
+      total_score +=
+        if frame.strike?
+          calculate_strike_bonus(index)
+        elsif frame.spare?
+          calculate_spare_bonus(index)
+        else
+          0
+        end
     end
 
     total_score
