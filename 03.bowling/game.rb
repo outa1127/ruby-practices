@@ -19,7 +19,7 @@ class Game
     @frames.each_with_index do |frame, index|
       total_score += frame.base_score
 
-      next if index >= 9
+      next if index == 9
 
       total_score +=
         if frame.strike?
