@@ -12,7 +12,7 @@ def main
     else
       [{ name: '', text: $stdin.read }]
     end
-  process_files(options, input_files)
+  process_files(input_files, options)
 end
 
 def parse_options
@@ -26,7 +26,7 @@ def parse_options
   params.values.any? ? params : { lines: true, words: true, bytes: true }
 end
 
-def process_files(options, input_files)
+def process_files(input_files, options)
   totals = { lines: 0, words: 0, bytes: 0, name: 'total' }
 
   input_files.each do |input_file|
