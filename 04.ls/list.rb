@@ -4,7 +4,9 @@ require_relative 'line'
 
 class List
   def initialize
-    @rows = formatting_rows(Dir.glob('*'))
+    files = Dir.glob('*')
+    @rows = formatting_rows(files)
+    @column_width = files.max_by(&:length).length
 
     @lines = @rows.map do |row|
       Line.new(row)
@@ -13,7 +15,7 @@ class List
 
   def print_list
     @lines.each do |line|
-      puts line.formatting.join
+      puts line.formatting_row(@column_width).join
     end
   end
 
