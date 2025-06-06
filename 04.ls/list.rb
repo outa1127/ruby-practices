@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
+require 'optparse'
+require_relative 'option'
 require_relative 'line'
 
 class List
   def initialize
-    files = Dir.glob('*')
+    @options = Option.new(ARGV)
+
+    files = fetch_files
+
     @rows = formatting_rows(files)
     @column_width = files.max_by(&:length).length
 
@@ -20,6 +25,12 @@ class List
   end
 
   private
+
+  def fetch_files
+    flags = @options.dotmatch_flags
+    files = Dir.glob('*', flags).sort
+    @options.reverse ? files.reverse : files
+  end
 
   def formatting_rows(files)
     cols = 3
