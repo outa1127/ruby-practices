@@ -1,17 +1,25 @@
 # frozen_string_literal: true
 
-require_relative 'format'
+require_relative 'line'
 
 class List
   def initialize
-    @files = formatting_files(Dir.glob('*'))
+    @rows = formatting_rows(Dir.glob('*'))
 
-    @formats = @files.map do |file|
-      Format.new(*file)
+    @lines = @rows.map do |row|
+      Line.new(row)
     end
   end
 
-  def formatting_files(files)
+  def print_list
+    @lines.each do |line|
+      puts line.formatting.join
+    end
+  end
+
+  private
+
+  def formatting_rows(files)
     cols = 3
     rows = files.length >= 1 ? (files.size.to_f / cols).ceil : 0
     sliced_contents = files.each_slice(rows).to_a
@@ -23,9 +31,5 @@ class List
     end
 
     indexed_contents.map(&:compact)
-  end
-
-  def print_list
-    @formats.each(&:formatting)
   end
 end
