@@ -38,9 +38,9 @@ def formatting_detaild_contents(contents)
       permission,
       file_detail.nlink.to_s.rjust(2, ' '),
       Etc.getpwuid(file_detail.uid).name,
-      Etc.getgrgid(file_detail.gid).name,
-      file_detail.size.to_s.rjust(4, ' '),
-      formatting_last_update_date(file_detail.mtime),
+      " #{Etc.getgrgid(file_detail.gid).name}",
+      " #{file_detail.size.to_s.rjust(4, ' ')}",
+      " #{formatting_last_update_date(file_detail.mtime)}",
       content
     ].join(' ')
   end
