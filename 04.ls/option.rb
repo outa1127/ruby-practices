@@ -3,7 +3,7 @@
 require 'optparse'
 
 class Option
-  attr_reader :reverse
+  attr_reader :reverse, :long
 
   def initialize(argv)
     @all = false

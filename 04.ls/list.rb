@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'optparse'
 require_relative 'option'
 require_relative 'line'
 
@@ -10,17 +9,23 @@ class List
 
     files = fetch_files
 
-    @rows = formatting_rows(files)
-    @column_width = files.max_by(&:length).length
+    if @options.long
+      @lines = collect_lines([files])
+    else
+      rows = formatting_rows(files)
+      @column_width = files.max_by(&:length).length
 
-    @lines = @rows.map do |row|
-      Line.new(row)
+      @lines = collect_lines(rows)
     end
   end
 
   def print_list
     @lines.each do |line|
-      puts line.formatting_row(@column_width).join
+      if @options.long
+        puts line.formatting_long
+      else
+        puts line.formatting_row(@column_width)
+      end
     end
   end
 
@@ -30,6 +35,12 @@ class List
     flags = @options.dotmatch_flags
     files = Dir.glob('*', flags).sort
     @options.reverse ? files.reverse : files
+  end
+
+  def collect_lines(files)
+    files.map do |file|
+      Line.new(file)
+    end
   end
 
   def formatting_rows(files)
