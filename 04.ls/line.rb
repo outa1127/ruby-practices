@@ -41,7 +41,7 @@ class Line
     lines
   end
 
-  def formatting_row(width)
+  def formatting_default(width)
     formatted_row = @files.map do |file|
       file.ljust(width + 2)
     end

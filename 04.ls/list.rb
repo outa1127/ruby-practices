@@ -24,7 +24,7 @@ class List
       if @options.long
         puts line.formatting_long
       else
-        puts line.formatting_row(@column_width)
+        puts line.formatting_default(@column_width)
       end
     end
   end
