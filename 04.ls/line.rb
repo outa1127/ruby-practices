@@ -2,8 +2,6 @@
 
 require_relative 'item'
 
-# Lineクラスでは配列をわたし、整形した状態のデータを返す
-
 class Line
   OWNER_INDEX = 0
   GROUP_INDEX = 1

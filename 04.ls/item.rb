@@ -2,8 +2,6 @@
 
 require 'etc'
 
-# Iremクラスでは各ファイルのサイズや作成日等を返す
-
 class Item
   attr_reader :name
 
