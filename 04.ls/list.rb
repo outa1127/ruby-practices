@@ -10,13 +10,13 @@ class List
     files = fetch_files
 
     if @options.long
-      @lines = collect_lines([files])
+      rows = [files]
     else
       rows = formatting_rows(files)
       @column_width = files.max_by(&:length).length
-
-      @lines = collect_lines(rows)
     end
+
+    @lines = collect_lines(rows)
   end
 
   def print_list
