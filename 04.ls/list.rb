@@ -12,7 +12,7 @@ class List
 
     if @options.long
       long_formatters = build_long_formatters(items)
-      puts "total #{get_total_block_size(long_lines)}"
+      puts "total #{get_total_block_size(long_formatters)}"
 
       long_formatters.each do |long_formatter|
         puts long_formatter.to_long_format
