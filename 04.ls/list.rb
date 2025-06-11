@@ -5,22 +5,23 @@ require_relative 'long_formatter'
 require_relative 'default_formatter'
 
 class List
-  def print_list
+  def initialize
     @options = Option.new(ARGV)
+    @items = fetch_items
+  end
 
-    items = fetch_items
-
+  def print_list
     if @options.long
-      long_formatters = build_long_formatters(items)
+      long_formatters = build_long_formatters
       puts "total #{get_total_block_size(long_formatters)}"
 
       long_formatters.each do |long_formatter|
         puts long_formatter.to_long_format
       end
     else
-      formatted_rows = format_rows(items)
-      item_max_width = items.max_by(&:length).length
-      default_fomatters = build_default_formatters(formatted_rows)
+      items_per_row = split_items_per_row
+      item_max_width = @items.max_by(&:length).length
+      default_fomatters = build_default_formatters(items_per_row)
 
       default_fomatters.each do |default_fomatter|
         puts default_fomatter.to_default_format(item_max_width)
@@ -36,8 +37,8 @@ class List
     @options.reverse ? files.reverse : files
   end
 
-  def build_long_formatters(items)
-    items.map do |item|
+  def build_long_formatters
+    @items.map do |item|
       LongFormatter.new(item)
     end
   end
@@ -52,17 +53,17 @@ class List
     end
   end
 
-  def format_rows(files)
+  def split_items_per_row
     cols = 3
-    rows = files.length >= 1 ? (files.size.to_f / cols).ceil : 0
-    sliced_contents = files.each_slice(rows).to_a
+    rows = @items.length >= 1 ? (@items.size.to_f / cols).ceil : 0
+    items_per_colmun = @items.each_slice(rows).to_a
 
-    indexed_contents = Array.new(rows) do |row|
+    items_per_row = Array.new(rows) do |row|
       Array.new(cols) do |col|
-        sliced_contents[col][row]
+        items_per_colmun[col][row]
       end
     end
 
-    indexed_contents.map(&:compact)
+    items_per_row.map(&:compact)
   end
 end
