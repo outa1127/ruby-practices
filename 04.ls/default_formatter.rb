@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class DefaultFormatter
-  def initialize(files)
-    @files = files
+  def initialize(row)
+    @row = row
   end
 
   def to_default_format(max_width)
-    formatted_row = @files.map do |file|
-      file.ljust(max_width + 2)
+    formatted_row = @row.map do |item|
+      item.ljust(max_width + 2)
     end
     formatted_row.join
   end

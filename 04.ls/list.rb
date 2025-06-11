@@ -13,7 +13,9 @@ class List
   def print_list
     if @options.long
       long_formatters = build_long_formatters
-      puts "total #{get_total_block_size(long_formatters)}"
+
+      total_block_size = long_formatters.sum(&:calculate_total_block_size)
+      puts "total #{total_block_size}"
 
       long_formatters.each do |long_formatter|
         puts long_formatter.to_long_format
@@ -41,10 +43,6 @@ class List
     @items.map do |item|
       LongFormatter.new(item)
     end
-  end
-
-  def get_total_block_size(long_lines)
-    long_lines.sum(&:calculate_total_block_size)
   end
 
   def build_default_formatters(rows)

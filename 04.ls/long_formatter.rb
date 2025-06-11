@@ -18,8 +18,8 @@ class LongFormatter
   }.freeze
   PERMISSION_LIST = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 
-  def initialize(files)
-    @item = Item.new(files)
+  def initialize(item)
+    @item = Item.new(item)
   end
 
   def calculate_total_block_size
