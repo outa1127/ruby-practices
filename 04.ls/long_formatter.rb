@@ -18,10 +18,7 @@ class LongFormatter
   }.freeze
   PERMISSION_LIST = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 
-  attr_reader :files
-
   def initialize(files)
-    @files = files
     @item = Item.new(files)
   end
 
@@ -29,7 +26,7 @@ class LongFormatter
     @item.calculate_blocks
   end
 
-  def format_long
+  def to_long_format
     lines = []
     permission = TYPE_LIST[@item.file_type.to_sym] +
                  format_exec_permission(@item.exec_permission, @item.sticky?, @item.set_uid?, @item.set_gid?)

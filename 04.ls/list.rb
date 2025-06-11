@@ -5,27 +5,25 @@ require_relative 'long_formatter'
 require_relative 'default_formatter'
 
 class List
-  def initialize
-    @options = Option.new(ARGV)
-  end
-
   def print_list
+    @options = Option.new(ARGV)
+
     items = fetch_items
 
     if @options.long
-      long_lines = build_long_formatters(items)
-      puts "total #{calculate_total_block_size(long_lines)}"
+      long_formatters = build_long_formatters(items)
+      puts "total #{get_total_block_size(long_lines)}"
 
-      long_lines.each do |line|
-        puts line.format_long
+      long_formatters.each do |long_formatter|
+        puts long_formatter.to_long_format
       end
     else
-      rows = format_rows(items)
+      formatted_rows = format_rows(items)
       item_max_width = items.max_by(&:length).length
-      default_lines = build_default_formatters(rows)
+      default_fomatters = build_default_formatters(formatted_rows)
 
-      default_lines.each do |line|
-        puts line.format_default(item_max_width)
+      default_fomatters.each do |default_fomatter|
+        puts default_fomatter.to_default_format(item_max_width)
       end
     end
   end
@@ -44,7 +42,7 @@ class List
     end
   end
 
-  def calculate_total_block_size(long_lines)
+  def get_total_block_size(long_lines)
     long_lines.sum(&:calculate_total_block_size)
   end
 

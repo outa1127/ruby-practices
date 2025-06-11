@@ -7,7 +7,6 @@ class Item
 
   def initialize(name)
     @name = name
-
     @stat = File.stat(name)
   end
 

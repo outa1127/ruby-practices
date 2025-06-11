@@ -5,7 +5,7 @@ class DefaultFormatter
     @files = files
   end
 
-  def format_default(max_width)
+  def to_default_format(max_width)
     formatted_row = @files.map do |file|
       file.ljust(max_width + 2)
     end
