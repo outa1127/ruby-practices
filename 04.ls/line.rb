@@ -67,9 +67,9 @@ class Line
     permission_list = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx']
     perms = exec_permission.each_char.map { |d| permission_list[d.to_i].dup }
     special_perms = [
-      [sticky_flag, OWNER_INDEX, 't', 'T'],
-      [set_user_id_flag, OTHERS_INDEX, 's', 'S'],
-      [set_group_id_flag, GROUP_INDEX, 's', 'S']
+      [set_user_id_flag, OWNER_INDEX, 's', 'S'],
+      [set_group_id_flag, GROUP_INDEX, 's', 'S'],
+      [sticky_flag, OTHERS_INDEX, 't', 'T']
     ]
     special_perms.each do |flag, target_index, exec_char, noexec_char|
       next unless flag
