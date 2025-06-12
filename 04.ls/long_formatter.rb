@@ -33,11 +33,10 @@ class LongFormatter
   end
 
   def format_item_stats
-    lines = []
-    @items.each do |item|
+    @items.map do |item|
       permission = TYPE_LIST[item.file_type.to_sym] +
                    format_exec_permission(item.exec_permission, item.sticky?, item.set_uid?, item.set_gid?)
-      lines << [
+      [
         permission,
         item.count_link.to_s.rjust(2),
         item.owner_name,
@@ -47,7 +46,6 @@ class LongFormatter
         item.name
       ].join(' ')
     end
-    lines
   end
 
   private
