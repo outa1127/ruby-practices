@@ -19,7 +19,6 @@ class LongFormatter
   PERMISSION_LIST = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 
   def initialize(items)
-    # @items = items
     @items = items.map do |item|
       Item.new(item)
     end
@@ -27,14 +26,14 @@ class LongFormatter
 
   def format
     output_total_block_size
-    to_long_format
+    output_item_stats
   end
 
   def output_total_block_size
     puts "total #{@items.sum(&:calculate_blocks)}"
   end
 
-  def to_long_format
+  def output_item_stats
     lines = []
     @items.each do |item|
       permission = TYPE_LIST[item.file_type.to_sym] +
