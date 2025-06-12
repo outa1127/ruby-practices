@@ -6,20 +6,27 @@ require_relative 'default_formatter'
 
 class List
   def initialize
-    @options = Option.new(ARGV)
+    @options = Options.new(ARGV)
   end
 
   def print_list
     items = fetch_items
-    formatter = @options.long ? LongFormatter.new(items) : DefaultFormatter.new(items)
+
+    return unless items
+
+    formatter = @options.long? ? LongFormatter.new(items) : DefaultFormatter.new(items)
     puts formatter.format
   end
 
   private
 
   def fetch_items
-    flags = @options.dotmatch_flags
-    files = Dir.glob('*', flags).sort
-    @options.reverse ? files.reverse : files
+    flags = @options.all?
+    items = Dir.glob('*', flags).sort
+    @options.reverse? ? items.reverse : items
+
+    items.map do |item|
+      Item.new(item)
+    end
   end
 end

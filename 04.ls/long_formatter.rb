@@ -19,14 +19,14 @@ class LongFormatter
   PERMISSION_LIST = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 
   def initialize(items)
-    @items = items.map do |item|
-      Item.new(item)
-    end
+    @items = items
   end
 
   def format
     [format_total_block_size, *format_item_stats]
   end
+
+  private
 
   def format_total_block_size
     "total #{@items.sum(&:calculate_blocks)}"
@@ -34,21 +34,19 @@ class LongFormatter
 
   def format_item_stats
     @items.map do |item|
-      permission = TYPE_LIST[item.file_type.to_sym] +
-                   format_exec_permission(item.exec_permission, item.sticky?, item.set_uid?, item.set_gid?)
+      item_type = TYPE_LIST[item.file_type.to_sym]
+      permission = format_exec_permission(item.exec_permission, item.sticky?, item.set_uid?, item.set_gid?)
       [
-        permission,
+        item_type + permission,
         item.count_link.to_s.rjust(2),
         item.owner_name,
         " #{item.group_name}",
         " #{item.file_size.to_s.rjust(4)}",
-        " #{format_last_updated_time(item.last_updated_time)}",
+        " #{item.last_updated_time.strftime('%-m %d %H:%M')}",
         item.name
       ].join(' ')
     end
   end
-
-  private
 
   def format_exec_permission(exec_permission, sticky_flag, set_user_id_flag, set_group_id_flag)
     perms = exec_permission.each_char.map { |d| PERMISSION_LIST[d.to_i].dup }
@@ -63,9 +61,5 @@ class LongFormatter
       perms[target_index][EXEC_PERMISSION_INDEX] = perms[target_index][EXEC_PERMISSION_INDEX] == 'x' ? exec_char : noexec_char
     end
     perms.join
-  end
-
-  def format_last_updated_time(last_updated_time)
-    last_updated_time.strftime('%-m %d %H:%M')
   end
 end

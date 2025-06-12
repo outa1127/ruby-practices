@@ -2,9 +2,7 @@
 
 require 'optparse'
 
-class Option
-  attr_reader :reverse, :long
-
+class Options
   def initialize(argv)
     @all = false
     @reverse = false
@@ -17,7 +15,15 @@ class Option
     end.parse!(argv)
   end
 
-  def dotmatch_flags
+  def long?
+    @long
+  end
+
+  def reverse?
+    @reverse
+  end
+
+  def all?
     @all ? File::FNM_DOTMATCH : 0
   end
 end
