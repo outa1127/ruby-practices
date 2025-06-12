@@ -12,7 +12,7 @@ class List
   def print_list
     items = fetch_items
     formatter = @options.long ? LongFormatter.new(items) : DefaultFormatter.new(items)
-    formatter.format
+    puts formatter.format
   end
 
   private

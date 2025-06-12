@@ -25,15 +25,14 @@ class LongFormatter
   end
 
   def format
-    output_total_block_size
-    output_item_stats
+    [format_total_block_size, *format_item_stats]
   end
 
-  def output_total_block_size
-    puts "total #{@items.sum(&:calculate_blocks)}"
+  def format_total_block_size
+    "total #{@items.sum(&:calculate_blocks)}"
   end
 
-  def output_item_stats
+  def format_item_stats
     lines = []
     @items.each do |item|
       permission = TYPE_LIST[item.file_type.to_sym] +
@@ -48,7 +47,7 @@ class LongFormatter
         item.name
       ].join(' ')
     end
-    puts lines
+    lines
   end
 
   private
