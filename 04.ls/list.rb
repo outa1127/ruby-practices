@@ -7,11 +7,10 @@ require_relative 'default_formatter'
 class List
   def initialize
     @options = Option.new(ARGV)
+    @items = fetch_items
   end
 
   def print_list
-    @items = fetch_items
-
     if @options.long
       long_formatters = build_long_formatters
 
