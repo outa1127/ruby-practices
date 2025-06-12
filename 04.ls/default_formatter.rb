@@ -8,8 +8,8 @@ class DefaultFormatter
   def format
     all_items_per_row = split_items
     width = calculate_max_width
-    all_items_per_row.each do |items_row|
-      output_items(items_row, width)
+    all_items_per_row.map do |items_row|
+      format_items(items_row, width)
     end
   end
 
@@ -33,10 +33,10 @@ class DefaultFormatter
     @items.max_by(&:length).length
   end
 
-  def output_items(items_row, width)
+  def format_items(items_row, width)
     formatted_row = items_row.map do |item|
       item.ljust(width + 2)
     end
-    puts formatted_row.join
+    formatted_row.join
   end
 end
