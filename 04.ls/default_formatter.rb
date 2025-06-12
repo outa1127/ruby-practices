@@ -17,16 +17,16 @@ class DefaultFormatter
   private
 
   def split_items
-    rows = @items.size.ceildiv(COLS)
-    items_per_colmun = @items.each_slice(rows).to_a
+    rows_number = @items.size.ceildiv(COLS)
+    cols_item = @items.each_slice(rows_number).to_a
 
-    items_per_row = Array.new(rows) do |row|
+    rows_item = Array.new(rows_number) do |row|
       Array.new(COLS) do |col|
-        items_per_colmun[col][row]
+        cols_item[col][row]
       end
     end
 
-    items_per_row.map(&:compact)
+    rows_item.map(&:compact)
   end
 
   def format_row(row, width)

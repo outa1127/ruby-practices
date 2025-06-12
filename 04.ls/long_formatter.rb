@@ -34,10 +34,10 @@ class LongFormatter
 
   def format_item_stats
     @items.map do |item|
-      item_type = TYPE_LIST[item.file_type.to_sym]
+      file_type = TYPE_LIST[item.file_type.to_sym]
       permission = format_exec_permission(item.exec_permission, item.sticky?, item.set_uid?, item.set_gid?)
       [
-        item_type + permission,
+        file_type + permission,
         item.count_link.to_s.rjust(2),
         item.owner_name,
         " #{item.group_name}",
