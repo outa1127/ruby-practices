@@ -18,30 +18,38 @@ class LongFormatter
   }.freeze
   PERMISSION_LIST = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].freeze
 
-  def initialize(item)
-    @item = Item.new(item)
+  def initialize(items)
+    # @items = items
+    @items = items.map do |item|
+      Item.new(item)
+    end
   end
 
-  def calculate_total_block_size
-    @item.calculate_blocks
+  def format
+    output_total_block_size
+    to_long_format
+  end
+
+  def output_total_block_size
+    puts "total #{@items.sum(&:calculate_blocks)}"
   end
 
   def to_long_format
     lines = []
-    permission = TYPE_LIST[@item.file_type.to_sym] +
-                 format_exec_permission(@item.exec_permission, @item.sticky?, @item.set_uid?, @item.set_gid?)
-
-    lines << [
-      permission,
-      @item.count_link.to_s.rjust(2),
-      @item.owner_name,
-      " #{@item.group_name}",
-      " #{@item.file_size.to_s.rjust(4)}",
-      " #{format_last_updated_time(@item.last_updated_time)}",
-      @item.name
-    ].join(' ')
-
-    lines
+    @items.each do |item|
+      permission = TYPE_LIST[item.file_type.to_sym] +
+                   format_exec_permission(item.exec_permission, item.sticky?, item.set_uid?, item.set_gid?)
+      lines << [
+        permission,
+        item.count_link.to_s.rjust(2),
+        item.owner_name,
+        " #{item.group_name}",
+        " #{item.file_size.to_s.rjust(4)}",
+        " #{format_last_updated_time(item.last_updated_time)}",
+        item.name
+      ].join(' ')
+    end
+    puts lines
   end
 
   private
