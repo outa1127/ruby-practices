@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'option'
+require_relative 'options'
 require_relative 'long_formatter'
 require_relative 'default_formatter'
 
