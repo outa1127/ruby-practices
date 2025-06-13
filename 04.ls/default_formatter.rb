@@ -9,7 +9,7 @@ class DefaultFormatter
 
   def format
     items_table = split_items
-    width = @items.map { |item| item.name.length }.max.to_i
+    width = @items.map { |item| item.name.length }.max
     items_table.map do |row|
       format_row(row, width)
     end
