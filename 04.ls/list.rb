@@ -21,7 +21,7 @@ class List
   private
 
   def fetch_items
-    flags = @options.all?
+    flags = @options.dotmatch_flag
     items = Dir.glob('*', flags).sort
     items = @options.reverse? ? items.reverse : items
 

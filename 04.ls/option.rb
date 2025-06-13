@@ -23,7 +23,7 @@ class Options
     @reverse
   end
 
-  def all?
+  def dotmatch_flag
     @all ? File::FNM_DOTMATCH : 0
   end
 end
