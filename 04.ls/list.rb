@@ -22,11 +22,11 @@ class List
 
   def fetch_items
     flags = @options.dotmatch_flag
-    items = Dir.glob('*', flags).sort
-    items = @options.reverse? ? items.reverse : items
+    file_names = Dir.glob('*', flags)
+    sorted_file_names = @options.reverse? ? file_names.sort.reverse : file_names.sort
 
-    items.map do |item|
-      Item.new(item)
+    sorted_file_names.map do |file_name|
+      Item.new(file_name)
     end
   end
 end
