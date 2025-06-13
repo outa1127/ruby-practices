@@ -2,6 +2,7 @@
 
 class DefaultFormatter
   COLS = 3
+
   def initialize(items)
     @items = items
   end
