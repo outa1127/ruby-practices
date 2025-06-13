@@ -19,7 +19,7 @@ class DefaultFormatter
 
   def split_items
     row_count = @items.size.ceildiv(COLS)
-    col_items = @items.each_slice(rows_number).to_a
+    col_items = @items.each_slice(row_count).to_a
 
     row_items = Array.new(row_count) do |row|
       Array.new(COLS) do |col|
