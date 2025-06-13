@@ -23,7 +23,7 @@ class List
   def fetch_items
     flags = @options.all?
     items = Dir.glob('*', flags).sort
-    @options.reverse? ? items.reverse : items
+    items = @options.reverse? ? items.reverse : items
 
     items.map do |item|
       Item.new(item)
